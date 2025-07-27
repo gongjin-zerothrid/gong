@@ -10,8 +10,8 @@
     <!-- Chosen Palette: Warm Neutral (Slate & Amber) -->
     <!-- Application Structure Plan: A dashboard-style single-page application. The top section contains an introduction and interactive sorting controls. The main body features two key visualizations (cost and recommendation score charts) for high-level comparison, followed by a responsive grid of restaurant cards. Each card presents essential information with an option to expand for detailed remarks. This structure allows users to quickly grasp the overall landscape through charts, then filter and dive into specific options via the interactive cards, facilitating an efficient decision-making process. -->
     <!-- Visualization & Content Choices: 
-        1. Estimated Cost -> Compare -> Horizontal Bar Chart (Chart.js): To visually compare the total estimated cost for a 10-person dinner. This is a primary decision factor ("가성비"), and a bar chart makes direct comparison intuitive. Interaction: Tooltips show exact costs, and a custom emoji highlights the highest bar.
-        2. Recommendation Score -> Compare -> Bar Chart (Chart.js): To rank restaurants by user/expert recommendation. This provides a clear quality indicator. Interaction: Bar colors will correspond to card badges for visual linkage, and a custom emoji highlights the highest bar.
+        1. Estimated Cost -> Compare -> Horizontal Bar Chart (Chart.js): To visually compare the total estimated cost for a 10-person dinner. This is a primary decision factor ("가성비"), and a bar chart makes direct comparison intuitive. Interaction: Tooltips show exact costs.
+        2. Recommendation Score -> Compare -> Bar Chart (Chart.js): To rank restaurants by user/expert recommendation. This provides a clear quality indicator. Interaction: Bar colors will correspond to card badges for visual linkage.
         3. Restaurant Data -> Organize/Inform -> Interactive Cards (HTML/CSS/JS): To present detailed information for each restaurant in a digestible, mobile-friendly format. A card layout is more engaging than a table. Interaction: Sorting buttons re-order the cards, and a "details" toggle reveals more information (including images and summarized/highlighted remarks), preventing initial clutter.
     -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
@@ -69,218 +69,173 @@
         </main>
     </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const restaurantData = [
-            { id: 'namjeong', name: '남정집 지웰', score: 95, menu: '통덧살, 1.5숙성삼겹', price: '15,000~16,000원', seating: '단체석 완비, 직원 구이', cost: 420000, remarks: '고기 품질이 매우 우수하며, 숙성 삼겹살과 통덧살이 특히 인기입니다. 직원이 직접 고기를 구워주어 편안하게 대화하며 식사에 집중할 수 있다는 큰 장점이 있습니다. 모임 장소로 인기가 많아 피크 시간대에는 대기가 있을 수 있으니 미리 예약하는 것이 좋습니다. 매장 청결도 또한 우수하여 쾌적한 환경에서 식사가 가능합니다. 10인 규모 단체석이 잘 갖춰져 있어 회식에 적합합니다.', image: 'https://raw.githubusercontent.com/gongjin-zerothrid/gong/c6cea52d598df068595a33425346ebc2013eb141/namjungzip.png', summary: '고기 품질이 <span class="text-amber-600 font-bold">매우 우수</span>하고 직원이 직접 구워줘 <span class="text-amber-600 font-bold">편안한 식사</span>가 가능합니다. <span class="text-amber-600 font-bold">단체석 완비</span>로 회식에 적합하며 청결합니다.' },
-            { id: 'daebal', name: '대발이네 연탄구이', score: 92, menu: '삼겹살/두루치기 전문', price: '정보 없음', seating: '넓은 좌석, 룸형 단체석', cost: 420000, remarks: '연탄으로 초벌하여 나오는 고기는 특유의 불향이 강해 고기 맛을 한층 더 살려줍니다. 삼겹살과 두루치기가 주력 메뉴로, 푸짐한 구성과 정겨운 분위기가 회식에 최적화되어 있다는 평이 많습니다. 넓은 좌석과 룸형 단체석이 마련되어 있어 10인 단체도 편안하게 이용할 수 있습니다. 가성비도 괜찮은 편이라 부담 없이 즐길 수 있는 회식 장소로 추천됩니다.', image: 'https://raw.githubusercontent.com/gongjin-zerothrid/gong/c6cea52d598df068595a33425346ebc2013eb141/daebalne.png', summary: '<span class="text-amber-600 font-bold">연탄 초벌 불향</span>이 강하고 <span class="text-amber-600 font-bold">푸짐한 구성</span>이 특징입니다. <span class="text-amber-600 font-bold">룸형 단체석</span>이 있어 회식에 최적화되어 있으며 가성비도 좋습니다.' },
-            { id: 'sammi', name: '삼미화로', score: 90, menu: '어깨살, 두툼목살, 삼겹살', price: '15,000원', seating: '폴딩도어 단체석', cost: 420000, remarks: '숙성 돼지고기 전문점으로, 어깨살, 목살, 삼겹살 등 다양한 부위를 즐길 수 있습니다. 직원이 직접 고기를 구워주어 가장 맛있는 상태로 고기를 맛볼 수 있으며, 다양한 사이드 메뉴 구성도 훌륭합니다. 매장 내부가 깔끔하고 세련된 분위기를 자랑하여 젊은 층에게도 인기가 많습니다. 폴딩도어로 된 단체석이 있어 개방감을 주면서도 단체 모임에 적합한 공간을 제공합니다.', image: 'https://raw.githubusercontent.com/gongjin-zerothrid/gong/c6cea52d598df068595a33425346ebc2013eb141/sam-mihawro.png', summary: '<span class="text-amber-600 font-bold">숙성 돼지고기 전문점</span>으로 직원이 고기를 직접 구워줍니다. <span class="text-amber-600 font-bold">사이드 메뉴 구성이 훌륭</span>하며, <span class="text-amber-600 font-bold">깔끔하고 세련된 분위기</span>의 폴딩도어 단체석이 있습니다.' },
-            { id: 'yukgam', name: '육감식당', score: 90, menu: '이베리코 흑돼지', price: '13,000~17,000원', seating: '단체 테이블, 예약 가능', cost: 440000, remarks: '스페인산 이베리코 흑돼지 목살, 삼겹살, 업진살, 황제살 등 고급 부위를 취급하는 곳입니다. 고기 질이 매우 뛰어나며, 깔끔하고 조용한 분위기에서 품격 있는 회식을 즐기기에 좋습니다. 가격대는 다른 식당에 비해 다소 높을 수 있지만, 그만큼 고기 맛과 분위기에서 만족도가 높다는 평이 많습니다. 단체 테이블이 구비되어 있으며, 10인 단체 예약도 가능합니다.', image: 'https://raw.githubusercontent.com/gongjin-zerothrid/gong/c6cea52d598df068595a33425346ebc2013eb141/sixgam.png', summary: '<span class="text-amber-600 font-bold">이베리코 흑돼지</span> 등 <span class="text-amber-600 font-bold">고급 부위</span>를 취급합니다. <span class="text-amber-600 font-bold">깔끔하고 조용한 분위기</span>에서 품격 있는 회식을 즐길 수 있으며, 단체 예약도 가능합니다.' },
-            { id: 'hwachun', name: '화춘가든', score: 88, menu: '소왕갈비, 마늘양념왕갈비', price: '26,000~27,000원', seating: '단체룸 확보 (예약 필수)', cost: 620000, remarks: '소갈비, 한우 등 고급 소고기를 전문으로 하는 곳입니다. 육즙 가득한 소왕갈비와 풍미 깊은 마늘양념왕갈비가 대표 메뉴입니다. 넓은 공간과 잘 갖춰진 단체룸이 있어 대규모 회식에 매우 적합하며, 단체 손님을 위한 서비스도 좋습니다. 다만, 고기 종류가 고급이다 보니 다른 식당에 비해 가격대가 높은 편입니다. 예산이 넉넉하고 고급스러운 분위기를 선호하는 회식에 추천합니다.', image: 'https://raw.githubusercontent.com/gongjin-zerothrid/gong/c6cea52d598df068595a33425346ebc2013eb141/hwachun.png', summary: '<span class="text-amber-600 font-bold">고급 소고기 전문점</span>으로 <span class="text-amber-600 font-bold">육즙 가득한 소왕갈비</span>가 일품입니다. <span class="text-amber-600 font-bold">넓은 단체룸</span>이 있어 대규모 회식에 적합하며 서비스가 좋습니다.' },
-            { id: 'gohon', name: '고혼', score: 85, menu: '숙성생삼겹살', price: '8,980원/200g', seating: '단체룸 추정, 셀프바', cost: 279600, remarks: '가성비 면에서 단연 돋보이는 식당입니다. 200g 기준 8,980원이라는 놀라운 가격에 숙성 생삼겹살을 즐길 수 있으며, 가격 대비 고기 퀄리티가 매우 좋습니다. 분홍소시지, 떡, 버섯, 각종 밑반찬 등 다양한 음식이 준비된 셀프바 구성이 매우 충실하여 푸짐하게 즐길 수 있습니다. 매장이 넓고 쾌적하다는 리뷰가 많아 10인 단체도 편안하게 이용할 수 있을 것으로 보입니다. 가성비를 최우선으로 고려한다면 강력 추천하는 곳입니다.', image: 'https://raw.githubusercontent.com/gongjin-zerothrid/gong/c6cea52d598df068595a33425346ebc2013eb141/gohon.png', summary: '<span class="text-amber-600 font-bold">압도적인 가성비</span>를 자랑하는 <span class="text-amber-600 font-bold">숙성 삼겹살 맛집</span>입니다. <span class="text-amber-600 font-bold">풍성한 셀프바</span>와 넓고 쾌적한 매장이 특징입니다.' },
-            { id: 'bumosan', name: '부모산가든', score: 80, menu: '부모산 촉촉담백 석갈비', price: '16,000원', seating: '넓은 공간, 통갈비 전문', cost: 400000, remarks: '통갈비 전문점으로, 촉촉하고 담백한 석갈비가 메인 메뉴입니다. 넓은 공간이 특징이며, 단체 회식에 특화된 좌석 배치가 되어 있습니다. 양념 맛에 대한 호불호는 있을 수 있지만 대체로 무난하다는 평이 많습니다. 주차 공간이 편리하게 마련되어 있어 차량을 이용하는 단체 손님들에게 유리합니다. 편안하고 넓은 공간에서 갈비를 즐기고 싶을 때 좋은 선택입니다.', image: 'https://raw.githubusercontent.com/gongjin-zerothrid/gong/c6cea52d598df068595a33425346ebc2013eb141/bumosangaurden.png', summary: '<span class="text-amber-600 font-bold">통갈비 전문점</span>으로 <span class="text-amber-600 font-bold">넓은 공간</span>과 <span class="text-amber-600 font-bold">단체 회식 특화 좌석</span>이 강점입니다. <span class="text-amber-600 font-bold">주차 편리</span>합니다.' },
-            { id: 'hanjeon', name: '한전회관', score: 75, menu: '소갈비살', price: '15,000원/180g', seating: '단체석 있음 (회식 모임 적합)', cost: 400000, remarks: '소갈비살을 가성비 좋게 즐길 수 있는 곳으로 알려져 있습니다. 180g에 15,000원이라는 합리적인 가격이 특징입니다. 친절한 서비스와 한적한 분위기에서 고기 질도 양호하다는 평이 많습니다. 단체석이 마련되어 있어 회식 모임에 적합하며, 비교적 조용하게 식사를 즐기고 싶은 단체에 추천할 만합니다.', image: 'https://raw.githubusercontent.com/gongjin-zerothrid/gong/c6cea52d598df068595a33425346ebc2013eb141/hanjeon.png', summary: '<span class="text-amber-600 font-bold">가성비 좋은 소갈비살</span> 전문점입니다. <span class="text-amber-600 font-bold">친절한 서비스</span>와 <span class="text-amber-600 font-bold">한적한 분위기</span>에서 단체 회식하기 좋습니다.' },
-            { id: 'miingye', name: '미인계', score: 60, menu: '미계도리탕', price: '중 34,000원', seating: '단체석 가능', cost: 400000, remarks: '닭볶음탕(미계도리탕)이 시그니처 메뉴인 닭 요리 전문점입니다. 닭다리살 파무침, 치즈감자전 등 다양한 닭 요리 사이드 메뉴가 있습니다. 닭 요리 위주로 구성되어 있어 \'고기 회식\'을 원하시는 경우에는 부적합할 수 있습니다. 하지만 닭 요리를 선호하고 복분자 등 술안주를 함께 즐기기에는 좋은 곳입니다. 매장이 깔끔하고 단체석도 가능하여 닭 요리 회식으로는 고려해볼 수 있습니다.', image: 'https://raw.githubusercontent.com/gongjin-zerothrid/gong/c6cea52d598df068595a33425346ebc2013eb141/meingye.png', summary: '<span class="text-amber-600 font-bold">미계도리탕이 시그니처</span>인 닭 요리 전문점입니다. <span class="text-amber-600 font-bold">깔끔한 매장</span>과 <span class="text-amber-600 font-bold">단체석이 가능</span>하며 술안주로도 좋습니다.' },
-        ];
+   <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const restaurantData = [
+                { id: 'namjeong', name: '남정집 지웰', score: 95, menu: '통덧살, 1.5숙성삼겹', price: '15,000~16,000원', seating: '단체석 완비, 직원 구이', cost: 420000, remarks: '고기 품질이 매우 우수하며, 숙성 삼겹살과 통덧살이 특히 인기입니다. 직원이 직접 고기를 구워주어 편안하게 대화하며 식사에 집중할 수 있다는 큰 장점이 있습니다. 모임 장소로 인기가 많아 피크 시간대에는 대기가 있을 수 있으니 미리 예약하는 것이 좋습니다. 매장 청결도 또한 우수하여 쾌적한 환경에서 식사가 가능합니다. 10인 규모 단체석이 잘 갖춰져 있어 회식에 적합합니다.', image: 'https://raw.githubusercontent.com/gongjin-zerothrid/gong/c6cea52d598df068595a33425346ebc2013eb141/namjungzip.png', summary: '고기 품질이 <span class="text-amber-600 font-bold">매우 우수</span>하고 직원이 직접 구워줘 <span class="text-amber-600 font-bold">편안한 식사</span>가 가능합니다. <span class="text-amber-600 font-bold">단체석 완비</span>로 회식에 적합하며 청결합니다.' },
+                { id: 'daebal', name: '대발이네 연탄구이', score: 92, menu: '삼겹살/두루치기 전문', price: '정보 없음', seating: '넓은 좌석, 룸형 단체석', cost: 420000, remarks: '연탄으로 초벌하여 나오는 고기는 특유의 불향이 강해 고기 맛을 한층 더 살려줍니다. 삼겹살과 두루치기가 주력 메뉴로, 푸짐한 구성과 정겨운 분위기가 회식에 최적화되어 있다는 평이 많습니다. 넓은 좌석과 룸형 단체석이 마련되어 있어 10인 단체도 편안하게 이용할 수 있습니다. 가성비도 괜찮은 편이라 부담 없이 즐길 수 있는 회식 장소로 추천됩니다.', image: 'https://raw.githubusercontent.com/gongjin-zerothrid/gong/c6cea52d598df068595a33425346ebc2013eb141/daebalne.png', summary: '<span class="text-amber-600 font-bold">연탄 초벌 불향</span>이 강하고 <span class="text-amber-600 font-bold">푸짐한 구성</span>이 특징입니다. <span class="text-amber-600 font-bold">룸형 단체석</span>이 있어 회식에 최적화되어 있으며 가성비도 좋습니다.' },
+                { id: 'sammi', name: '삼미화로', score: 90, menu: '어깨살, 두툼목살, 삼겹살', price: '15,000원', seating: '폴딩도어 단체석', cost: 420000, remarks: '숙성 돼지고기 전문점으로, 어깨살, 목살, 삼겹살 등 다양한 부위를 즐길 수 있습니다. 직원이 직접 고기를 구워주어 가장 맛있는 상태로 고기를 맛볼 수 있으며, 다양한 사이드 메뉴 구성도 훌륭합니다. 매장 내부가 깔끔하고 세련된 분위기를 자랑하여 젊은 층에게도 인기가 많습니다. 폴딩도어로 된 단체석이 있어 개방감을 주면서도 단체 모임에 적합한 공간을 제공합니다.', image: 'https://raw.githubusercontent.com/gongjin-zerothrid/gong/c6cea52d598df068595a33425346ebc2013eb141/sam-mihawro.png', summary: '<span class="text-amber-600 font-bold">숙성 돼지고기 전문점</span>으로 직원이 고기를 직접 구워줍니다. <span class="text-amber-600 font-bold">사이드 메뉴 구성이 훌륭</span>하며, <span class="text-amber-600 font-bold">깔끔하고 세련된 분위기</span>의 폴딩도어 단체석이 있습니다.' },
+                { id: 'yukgam', name: '육감식당', score: 90, menu: '이베리코 흑돼지', price: '13,000~17,000원', seating: '단체 테이블, 예약 가능', cost: 440000, remarks: '스페인산 이베리코 흑돼지 목살, 삼겹살, 업진살, 황제살 등 고급 부위를 취급하는 곳입니다. 고기 질이 매우 뛰어나며, 깔끔하고 조용한 분위기에서 품격 있는 회식을 즐기기에 좋습니다. 가격대는 다른 식당에 비해 다소 높을 수 있지만, 그만큼 고기 맛과 분위기에서 만족도가 높다는 평이 많습니다. 단체 테이블이 구비되어 있으며, 10인 단체 예약도 가능합니다.', image: 'https://raw.githubusercontent.com/gongjin-zerothrid/gong/c6cea52d598df068595a33425346ebc2013eb141/sixgam.png', summary: '<span class="text-amber-600 font-bold">이베리코 흑돼지</span> 등 <span class="text-amber-600 font-bold">고급 부위</span>를 취급합니다. <span class="text-amber-600 font-bold">깔끔하고 조용한 분위기</span>에서 품격 있는 회식을 즐길 수 있으며, 단체 예약도 가능합니다.' },
+                { id: 'hwachun', name: '화춘가든', score: 88, menu: '소왕갈비, 마늘양념왕갈비', price: '26,000~27,000원', seating: '단체룸 확보 (예약 필수)', cost: 620000, remarks: '소갈비, 한우 등 고급 소고기를 전문으로 하는 곳입니다. 육즙 가득한 소왕갈비와 풍미 깊은 마늘양념왕갈비가 대표 메뉴입니다. 넓은 공간과 잘 갖춰진 단체룸이 있어 대규모 회식에 매우 적합하며, 단체 손님을 위한 서비스도 좋습니다. 다만, 고기 종류가 고급이다 보니 다른 식당에 비해 가격대가 높은 편입니다. 예산이 넉넉하고 고급스러운 분위기를 선호하는 회식에 추천합니다.', image: 'https://raw.githubusercontent.com/gongjin-zerothrid/gong/c6cea52d598df068595a33425346ebc2013eb141/hwachun.png', summary: '<span class="text-amber-600 font-bold">고급 소고기 전문점</span>으로 <span class="text-amber-600 font-bold">육즙 가득한 소왕갈비</span>가 일품입니다. <span class="text-amber-600 font-bold">넓은 단체룸</span>이 있어 대규모 회식에 적합하며 서비스가 좋습니다.' },
+                { id: 'gohon', name: '고혼', score: 85, menu: '숙성생삼겹살', price: '8,980원/200g', seating: '단체룸 추정, 셀프바', cost: 279600, remarks: '가성비 면에서 단연 돋보이는 식당입니다. 200g 기준 8,980원이라는 놀라운 가격에 숙성 생삼겹살을 즐길 수 있으며, 가격 대비 고기 퀄리티가 매우 좋습니다. 분홍소시지, 떡, 버섯, 각종 밑반찬 등 다양한 음식이 준비된 셀프바 구성이 매우 충실하여 푸짐하게 즐길 수 있습니다. 매장이 넓고 쾌적하다는 리뷰가 많아 10인 단체도 편안하게 이용할 수 있을 것으로 보입니다. 가성비를 최우선으로 고려한다면 강력 추천하는 곳입니다.', image: 'https://raw.githubusercontent.com/gongjin-zerothrid/gong/c6cea52d598df068595a33425346ebc2013eb141/gohon.png', summary: '<span class="text-amber-600 font-bold">압도적인 가성비</span>를 자랑하는 <span class="text-amber-600 font-bold">숙성 삼겹살 맛집</span>입니다. <span class="text-amber-600 font-bold">풍성한 셀프바</span>와 넓고 쾌적한 매장이 특징입니다.' },
+                { id: 'bumosan', name: '부모산가든', score: 80, menu: '부모산 촉촉담백 석갈비', price: '16,000원', seating: '넓은 공간, 통갈비 전문', cost: 400000, remarks: '통갈비 전문점으로, 촉촉하고 담백한 석갈비가 메인 메뉴입니다. 넓은 공간이 특징이며, 단체 회식에 특화된 좌석 배치가 되어 있습니다. 양념 맛에 대한 호불호는 있을 수 있지만 대체로 무난하다는 평이 많습니다. 주차 공간이 편리하게 마련되어 있어 차량을 이용하는 단체 손님들에게 유리합니다. 편안하고 넓은 공간에서 갈비를 즐기고 싶을 때 좋은 선택입니다.', image: 'https://raw.githubusercontent.com/gongjin-zerothrid/gong/c6cea52d598df068595a33425346ebc2013eb141/bumosangaurden.png', summary: '<span class="text-amber-600 font-bold">통갈비 전문점</span>으로 <span class="text-amber-600 font-bold">넓은 공간</span>과 <span class="text-amber-600 font-bold">단체 회식 특화 좌석</span>이 강점입니다. <span class="text-amber-600 font-bold">주차 편리</span>합니다.' },
+                { id: 'hanjeon', name: '한전회관', score: 75, menu: '소갈비살', price: '15,000원/180g', seating: '단체석 있음 (회식 모임 적합)', cost: 400000, remarks: '소갈비살을 가성비 좋게 즐길 수 있는 곳으로 알려져 있습니다. 180g에 15,000원이라는 합리적인 가격이 특징입니다. 친절한 서비스와 한적한 분위기에서 고기 질도 양호하다는 평이 많습니다. 단체석이 마련되어 있어 회식 모임에 적합하며, 비교적 조용하게 식사를 즐기고 싶은 단체에 추천할 만합니다.', image: 'https://raw.githubusercontent.com/gongjin-zerothrid/gong/c6cea52d598df068595a33425346ebc2013eb141/hanjeon.png', summary: '<span class="text-amber-600 font-bold">가성비 좋은 소갈비살</span> 전문점입니다. <span class="text-amber-600 font-bold">친절한 서비스</span>와 <span class="text-amber-600 font-bold">한적한 분위기</span>에서 단체 회식하기 좋습니다.' },
+                { id: 'miingye', name: '미인계', score: 60, menu: '미계도리탕', price: '중 34,000원', seating: '단체석 가능', cost: 400000, remarks: '닭볶음탕(미계도리탕)이 시그니처 메뉴인 닭 요리 전문점입니다. 닭다리살 파무침, 치즈감자전 등 다양한 닭 요리 사이드 메뉴가 있습니다. 닭 요리 위주로 구성되어 있어 \'고기 회식\'을 원하시는 경우에는 부적합할 수 있습니다. 하지만 닭 요리를 선호하고 복분자 등 술안주를 함께 즐기기에는 좋은 곳입니다. 매장이 깔끔하고 단체석도 가능하여 닭 요리 회식으로는 고려해볼 수 있습니다.', image: 'https://raw.githubusercontent.com/gongjin-zerothrid/gong/c6cea52d598df068595a33425346ebc2013eb141/meingye.png', summary: '<span class="text-amber-600 font-bold">미계도리탕이 시그니처</span>인 닭 요리 전문점입니다. <span class="text-amber-600 font-bold">깔끔한 매장</span>과 <span class="text-amber-600 font-bold">단체석이 가능</span>하며 술안주로도 좋습니다.' },
+            ];
 
-        const grid = document.getElementById('restaurant-grid');
-        const sortButtons = document.querySelectorAll('.sort-btn');
-        
-        let costChart, scoreChart;
+            const grid = document.getElementById('restaurant-grid');
+            const sortButtons = document.querySelectorAll('.sort-btn');
+            
+            let costChart, scoreChart;
+            
+            const getScoreColor = (score) => {
+                if (score >= 90) return 'bg-emerald-100 text-emerald-800';
+                if (score >= 80) return 'bg-amber-100 text-amber-800';
+                return 'bg-slate-100 text-slate-800';
+            };
 
-        const getScoreColor = (score) => {
-            if (score >= 90) return 'bg-emerald-100 text-emerald-800';
-            if (score >= 80) return 'bg-amber-100 text-amber-800';
-            return 'bg-slate-100 text-slate-800';
-        };
-
-        const renderCards = (data) => {
-            grid.innerHTML = '';
-            data.forEach(r => {
-                const card = document.createElement('div');
-                card.className = 'bg-white rounded-xl shadow-md overflow-hidden transform hover:-translate-y-1 transition-transform duration-300';
-                card.innerHTML = `
-                    <div class="p-6">
-                        <div class="flex justify-between items-start">
-                            <h3 class="text-xl font-bold text-slate-900 mb-2">${r.name}</h3>
-                            <span class="text-sm font-bold px-3 py-1 rounded-full ${getScoreColor(r.score)}">${r.score}점</span>
-                        </div>
-                        <div class="text-slate-600 space-y-2 mt-2">
-                            <p><span class="font-semibold">🍽️ 주요메뉴:</span> ${r.menu} (${r.price})</p>
-                            <p><span class="font-semibold">👥 단체석:</span> ${r.seating}</p>
-                            <p><span class="font-semibold">💰 예상비용:</span> 약 ${r.cost.toLocaleString()}원</p>
-                        </div>
-                        <p class="text-slate-700 text-sm mt-4">${r.summary}</p>
-                        <div class="mt-4">
-                            <button class="details-btn text-amber-600 font-semibold hover:text-amber-800 transition-colors">자세히 보기</button>
-                            <div class="details-content hidden mt-3 text-slate-700 text-sm bg-slate-50 p-3 rounded-lg">
-                                ${r.image ? `<img src="${r.image}" alt="${r.name} 사진" class="w-full h-48 object-cover rounded-lg mb-3" onerror="this.onerror=null;this.src='https://placehold.co/600x400/E0E0E0/000000?text=이미지%20없음';" />` : ''}
-                                ${r.remarks}
+            const renderCards = (data) => {
+                grid.innerHTML = '';
+                data.forEach(r => {
+                    const card = document.createElement('div');
+                    card.className = 'bg-white rounded-xl shadow-md overflow-hidden transform hover:-translate-y-1 transition-transform duration-300';
+                    card.innerHTML = `
+                        <div class="p-6">
+                            <div class="flex justify-between items-start">
+                                <h3 class="text-xl font-bold text-slate-900 mb-2">${r.name}</h3>
+                                <span class="text-sm font-bold px-3 py-1 rounded-full ${getScoreColor(r.score)}">${r.score}점</span>
+                            </div>
+                            <div class="text-slate-600 space-y-2 mt-2">
+                                <p><span class="font-semibold">🍽️ 주요메뉴:</span> ${r.menu} (${r.price})</p>
+                                <p><span class="font-semibold">👥 단체석:</span> ${r.seating}</p>
+                                <p><span class="font-semibold">💰 예상비용:</span> 약 ${r.cost.toLocaleString()}원</p>
+                            </div>
+                            <p class="text-slate-700 text-sm mt-4">${r.summary}</p>
+                            <div class="mt-4">
+                                <button class="details-btn text-amber-600 font-semibold hover:text-amber-800 transition-colors">자세히 보기</button>
+                                <div class="details-content hidden mt-3 text-slate-700 text-sm bg-slate-50 p-3 rounded-lg">
+                                    ${r.image ? `<img src="${r.image}" alt="${r.name} 사진" class="w-full h-48 object-cover rounded-lg mb-3" onerror="this.onerror=null;this.src='https://placehold.co/600x400/E0E0E0/000000?text=이미지%20없음';" />` : ''}
+                                    ${r.remarks}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-
-            document.querySelectorAll('.details-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const content = btn.nextElementSibling;
-                    content.classList.toggle('hidden');
-                    btn.textContent = content.classList.contains('hidden') ? '자세히 보기' : '간략히 보기';
+                    `;
+                    grid.appendChild(card);
                 });
-            });
-        };
 
-        const renderCharts = (data) => {
-            const costCtx = document.getElementById('costChart').getContext('2d');
-            const scoreCtx = document.getElementById('scoreChart').getContext('2d');
+                document.querySelectorAll('.details-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const content = btn.nextElementSibling;
+                        content.classList.toggle('hidden');
+                        btn.textContent = content.classList.contains('hidden') ? '자세히 보기' : '간략히 보기';
+                    });
+                });
+            };
 
-            const sortedByCost = [...data].sort((a, b) => a.cost - b.cost);
-            const sortedByScore = [...data].sort((a, b) => b.score - a.score);
+            const renderCharts = (data) => {
+                const costCtx = document.getElementById('costChart').getContext('2d');
+                const scoreCtx = document.getElementById('scoreChart').getContext('2d');
 
-            if(costChart) costChart.destroy();
-            costChart = new Chart(costCtx, {
-                type: 'bar',
-                data: {
-                    labels: sortedByCost.map(r => r.name),
-                    datasets: [{
-                        label: '예상 비용 (원)',
-                        data: sortedByCost.map(r => r.cost),
-                        backgroundColor: 'rgba(245, 158, 11, 0.6)', // amber-500
-                        borderColor: 'rgba(245, 158, 11, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    indexAxis: 'y',
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                label: (context) => `${context.dataset.label}: ${context.raw.toLocaleString()}원`
+                const sortedByCost = [...data].sort((a, b) => a.cost - b.cost);
+                const sortedByScore = [...data].sort((a, b) => b.score - a.score);
+
+                if(costChart) costChart.destroy();
+                costChart = new Chart(costCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: sortedByCost.map(r => r.name),
+                        datasets: [{
+                            label: '예상 비용 (원)',
+                            data: sortedByCost.map(r => r.cost),
+                            backgroundColor: 'rgba(245, 158, 11, 0.6)', // amber-500
+                            borderColor: 'rgba(245, 158, 11, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        indexAxis: 'y',
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: (context) => `${context.dataset.label}: ${context.raw.toLocaleString()}원`
+                                }
                             }
                         }
                     }
-                },
-                plugins: [{
-                    id: 'customEmojiDrawer',
-                    afterDraw: (chart) => {
-                        const { ctx } = chart;
-                        const meta = chart.getDatasetMeta(0);
-                        // 데이터가 없으면 종료
-                        if (meta.data.length === 0) return;
-                        
-                        // 비용이 가장 높은 마지막 막대를 찾음 (오름차순 정렬 기준)
-                        const highestBar = meta.data[meta.data.length - 1];
-                        
-                        if (highestBar) {
-                            const x = highestBar.x + 10;
-                            const y = highestBar.y;
-                            ctx.font = '20px Arial';
-                            ctx.fillStyle = 'black';
-                            ctx.textAlign = 'left';
-                            ctx.textBaseline = 'middle';
-                            ctx.fillText('💸', x, y);
-                        }
-                    }
-                }]
-            });
-
-            if(scoreChart) scoreChart.destroy();
-            scoreChart = new Chart(scoreCtx, {
-                type: 'bar',
-                data: {
-                    labels: sortedByScore.map(r => r.name),
-                    datasets: [{
-                        label: '추천도 점수',
-                        data: sortedByScore.map(r => r.score),
-                        backgroundColor: sortedByScore.map(r => {
-                            if (r.score >= 90) return 'rgba(16, 185, 129, 0.6)';
-                            if (r.score >= 80) return 'rgba(245, 158, 11, 0.6)';
-                            return 'rgba(100, 116, 139, 0.6)';
-                        }),
-                        borderColor: sortedByScore.map(r => {
-                            if (r.score >= 90) return 'rgba(16, 185, 129, 1)';
-                            if (r.score >= 80) return 'rgba(245, 158, 11, 1)';
-                            return 'rgba(100, 116, 139, 1)';
-                        }),
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            max: 100
-                        }
-                    }
-                },
-                plugins: [{
-                    id: 'customEmojiDrawer',
-                    afterDraw: (chart) => {
-                        const { ctx } = chart;
-                        const meta = chart.getDatasetMeta(0);
-                        // 데이터가 없으면 종료
-                        if (meta.data.length === 0) return;
-
-                        // 점수가 가장 높은 첫번째 막대를 찾음 (내림차순 정렬 기준)
-                        const highestBar = meta.data[0];
-
-                        if (highestBar) {
-                            const x = highestBar.x;
-                            const y = highestBar.y - 15;
-                            ctx.font = '20px Arial';
-                            ctx.fillStyle = 'black';
-                            ctx.textAlign = 'center';
-                            ctx.textBaseline = 'bottom';
-                            ctx.fillText('👍', x, y);
-                        }
-                    }
-                }]
-            });
-        };
-
-        const sortData = (criteria) => {
-            let sortedData;
-            switch (criteria) {
-                case 'cost-asc':
-                    sortedData = [...restaurantData].sort((a, b) => a.cost - b.cost);
-                    break;
-                case 'cost-desc':
-                    sortedData = [...restaurantData].sort((a, b) => b.cost - a.cost);
-                    break;
-                case 'recommend':
-                default:
-                    sortedData = [...restaurantData].sort((a, b) => b.score - a.score);
-                    break;
-            }
-            renderCards(sortedData);
-        };
-
-        sortButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                sortButtons.forEach(btn => {
-                    btn.classList.remove('bg-amber-500', 'text-white');
-                    btn.classList.add('bg-slate-200', 'text-slate-700');
                 });
-                button.classList.add('bg-amber-500', 'text-white');
-                button.classList.remove('bg-slate-200', 'text-slate-700');
-                sortData(button.id.replace('sort-', ''));
-            });
-        });
 
-        // 초기 데이터 로딩
-        sortData('recommend');
-        renderCharts(restaurantData);
-    });
-</script>
+                if(scoreChart) scoreChart.destroy();
+                scoreChart = new Chart(scoreCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: sortedByScore.map(r => r.name),
+                        datasets: [{
+                            label: '추천도 점수',
+                            data: sortedByScore.map(r => r.score),
+                            backgroundColor: sortedByScore.map(r => {
+                                if (r.score >= 90) return 'rgba(16, 185, 129, 0.6)';
+                                if (r.score >= 80) return 'rgba(245, 158, 11, 0.6)';
+                                return 'rgba(100, 116, 139, 0.6)';
+                            }),
+                            borderColor: sortedByScore.map(r => {
+                                if (r.score >= 90) return 'rgba(16, 185, 129, 1)';
+                                if (r.score >= 80) return 'rgba(245, 158, 11, 1)';
+                                return 'rgba(100, 116, 139, 1)';
+                            }),
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 100
+                            }
+                        }
+                    }
+                });
+            };
+
+            const sortData = (criteria) => {
+                let sortedData;
+                switch (criteria) {
+                    case 'cost-asc':
+                        sortedData = [...restaurantData].sort((a, b) => a.cost - b.cost);
+                        break;
+                    case 'cost-desc':
+                        sortedData = [...restaurantData].sort((a, b) => b.cost - a.cost);
+                        break;
+                    case 'recommend':
+                    default:
+                        sortedData = [...restaurantData].sort((a, b) => b.score - a.score);
+                        break;
+                }
+                renderCards(sortedData);
+            };
+
+            sortButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    sortButtons.forEach(btn => {
+                        btn.classList.remove('bg-amber-500', 'text-white');
+                        btn.classList.add('bg-slate-200', 'text-slate-700');
+                    });
+                    button.classList.add('bg-amber-500', 'text-white');
+                    button.classList.remove('bg-slate-200', 'text-slate-700');
+                    sortData(button.id.replace('sort-', ''));
+                });
+            });
+
+            sortData('recommend');
+            renderCharts(restaurantData);
+        });
+    </script>
 </body>
 </html>
